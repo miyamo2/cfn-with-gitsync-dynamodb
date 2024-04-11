@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  Env:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - stage
+      - prod
+
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub users-${Env}
+      AttributeDefinitions:
+        - AttributeName: "UserId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "UserId"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
+      BillingMode: PROVISIONED
+  SSMParameterUsersTableTableName:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Tier: "Standard"
+      Name: !Sub /${Env}/dynamodb/users/name
+      Type: "String"
+      Value: !Ref UsersTable
+      Description: "UsersTable TableName"
