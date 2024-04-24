@@ -32,3 +32,11 @@ Resources:
       Type: "String"
       Value: !Ref UsersTable
       Description: "UsersTable TableName"
+  SSMParameterUsersTableTableArn:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Tier: "Standard"
+      Name: !Sub /${Env}/dynamodb/users/arn
+      Type: "String"
+      Value: !GetAtt UsersTable.Arn
+      Description: "UsersTable TableArn"
